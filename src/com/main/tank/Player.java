@@ -2,6 +2,10 @@ package com.main.tank;
 import java.awt.Graphics;
 
 import com.main.tank.*;
+import com.main.tank.strategy.DefaultFireStrategy;
+import com.main.tank.strategy.FireStrategy;
+import com.main.tank.strategy.FourDirFireStrategy;
+
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -25,6 +29,22 @@ public class Player {
 		return Live;
 	}
 
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
+	public Dir getDir() {
+		return dir;
+	}
+
+	public void setDir(Dir dir) {
+		this.dir = dir;
+	}
+
 	public void setLive(boolean live) {
 		Live = live;
 	}
@@ -38,6 +58,8 @@ public class Player {
 		this.group = group;
 		this.width = ResourceMgr.goodTankD.getWidth();
 		this.height = ResourceMgr.goodTankD.getHeight();
+		
+		this.initFireStrategy();
 
 
 	}
@@ -167,12 +189,30 @@ public class Player {
 		setMainDir();
 	}
 
-	private void fire() {
-		int bx = x + ResourceMgr.goodTankD.getWidth()/2 - ResourceMgr.bulletD.getWidth()/2;
-		int by = y + ResourceMgr.goodTankD.getHeight()/2 - ResourceMgr.bulletD.getHeight()/2;
+	private FireStrategy strategy = null;
+	
+	private void initFireStrategy() {
+		
+//		ClassLoader loader = Player.class.getClassLoader();
+		String classname = ProperityMgr.get("TankFireStrategy");
+		
+		try {
+//			Class clazz = loader.loadClass("com.main.tank.strategy."+classname);
+			Class clazz = Class.forName("com.main.tank.strategy."+classname);
+			strategy = (FireStrategy) clazz.getDeclaredConstructor().newInstance();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
-		Bullet bullet = new Bullet(bx,by,this.dir,this.group);
-		TankFrame.Instance.add(bullet);
+	
+	private void fire() {
+		
+
+		strategy.fire(this);
+		
 	}
 
 	public void die() {
