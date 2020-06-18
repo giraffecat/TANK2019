@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
-public class Explode {
+public class Explode extends AbstractGameObject {
 
 	private int x,y;
 	private int width;

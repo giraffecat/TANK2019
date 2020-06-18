@@ -4,3 +4,4 @@
 	 GameHeight=600
 	 
 	 TankFireStrategy = DefaultFireStrategy
+	 Colliders=BulletTankCollider,BulletWallCollider

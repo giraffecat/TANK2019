@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
-public class Bullet {
+public class Bullet extends AbstractGameObject {
 
 	private int x,y;
 	private Dir dir;
@@ -29,7 +29,8 @@ public class Bullet {
 	}
 	
 	public void paint(Graphics g) {
-
+		if(!isLive()) return;
+		
 		switch(dir){
 		case L:
 			g.drawImage(ResourceMgr.bulletL, x, y, null, null);
@@ -49,7 +50,7 @@ public class Bullet {
 	}
 
 	private void move() {
-
+	
 		switch(dir){
 			case L:
 				x -= SPEED;
@@ -64,18 +65,18 @@ public class Bullet {
 				y += SPEED;
 				break;
 		}
+		boundcheck();
 	}
 	
-	public boolean inedge() {
-		if(x>800||y>600||x<0||y<0||Live == false)
-		return false;
-		return true;
-		
+	public void boundcheck() {
+		if (x < 0 || y < 30 || x > TankFrame.GAME_WIDTH || y > TankFrame.GAME_HEIGHT) {
+			this.setLive(false);
+		}
 	}
 	
 	public void colidesWithTank(Tank tank){
 		
-		if(!tank.isLive()) return;
+		if(!tank.isLive()||!this.isLive()) return;
 		if(this.group == tank.getGroup()) return;
 		Rectangle rect = new Rectangle(x,y,ResourceMgr.bulletU.getWidth(),ResourceMgr.bulletU.getHeight());
 		Rectangle rectRank = new Rectangle(tank.getX(),tank.getY(),
@@ -87,6 +88,18 @@ public class Bullet {
 		}
 				
 	}
+	
+	public void colidesWithWall(Wall wall){
+			
+			Rectangle rect = new Rectangle(x,y,ResourceMgr.bulletU.getWidth(),ResourceMgr.bulletU.getHeight());
+			Rectangle rectWall = new Rectangle(wall.getX(),wall.getY(),wall.getW(),wall.getH());
+			
+			if(rect.intersects(rectWall)) {
+				this.die();
+			}
+					
+		}
+		
 	
 
 	public void die() {

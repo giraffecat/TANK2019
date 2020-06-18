@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class Player {
+public class Player extends AbstractGameObject{
 
 	private int x,y;
 	private static final int SPEED=5;

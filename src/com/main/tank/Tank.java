@@ -10,7 +10,7 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-public class Tank {
+public class Tank extends AbstractGameObject {
 
 	private int x,y;
 	private static final int SPEED=5;
@@ -43,9 +43,8 @@ public class Tank {
 
 	public void paint(Graphics g) {
 		
-		if(!this.isLive()) {
-			g.drawImage(ResourceMgr.explodes[13], x, y, null,null);
-		} 
+		if(!this.isLive()) 
+		 return;
 		
 			switch(dir){
 			case L:
@@ -166,6 +165,7 @@ public class Tank {
 
 		this.setLive(false);
 		TankFrame.Instance.add(new Explode(ex,ey));
+		
 	}
 	
 	
