@@ -17,7 +17,7 @@ public class FourDirFireStrategy implements FireStrategy {
 		Dir[] dirs = Dir.values();
 		for(Dir d : dirs) {
 			Bullet bullet = new Bullet(bx,by,d,player.getGroup());
-			TankFrame.Instance.add(bullet);
+			TankFrame.Instance.getGm().add(bullet);
 		}
 	}
 

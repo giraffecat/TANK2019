@@ -20,6 +20,7 @@ public class Tank extends AbstractGameObject {
 	private Group group;
 	private boolean Live = true;
 	private int width, height;
+	private int OldX,OldY;
 
 	
 	public boolean isLive() {
@@ -82,34 +83,38 @@ public class Tank extends AbstractGameObject {
 			dir = Dir.L;
 	}
 
-	private boolean inedge() {
-		if(x>800||y>600||x<0||y<0||Live == false)
-		return false;
-		return true;
-		
+	public void boundcheck() {
+		if (x < 0 || y < 30 || x+width > TankFrame.GAME_WIDTH || y+height > TankFrame.GAME_HEIGHT) {
+			this.back();
+		}
 	}
 	
+	
+	public void back() {
+		this.x = OldX;
+		this.y = OldY;
+	}
+
 	private void move() {
 		if(!moving) return;
+		OldX = x;
+		OldY = y;
 		
 		switch(dir){
 		case L:
-			if(x>0)
 			x -= SPEED;
 			break;
 		case R:
-			if(x+width<TankFrame.GAME_WIDTH)
 			x += SPEED;
 			break;
 		case U:
-			if(y>0)
 			y -= SPEED;
 			break;
 		case D:
-			if(y+height<TankFrame.GAME_HEIGHT)
 			y += SPEED;
 			break;
 	}
+		boundcheck();
 		randomDir();
 		
 		Random rf = new Random();
@@ -152,19 +157,19 @@ public class Tank extends AbstractGameObject {
 
 
 	private void fire() {
-		int bx = x + ResourceMgr.goodTankD.getWidth()/2 - ResourceMgr.bulletD.getWidth()/2;
-		int by = y + ResourceMgr.goodTankD.getHeight()/2 - ResourceMgr.bulletD.getHeight()/2;
+		int bx = x + width/2 - Bullet.W/2;
+		int by = y + height/2 - Bullet.H/2;
 
 		Bullet bullet = new Bullet(bx,by,this.dir,this.group);
-		TankFrame.Instance.add(bullet);
+		TankFrame.Instance.getGm().add(bullet);
 	}
 
 	public void die() {
-		int ex = x + ResourceMgr.goodTankD.getWidth()/2 - ResourceMgr.bulletD.getWidth()/2;
-		int ey = y + ResourceMgr.goodTankD.getHeight()/2 - ResourceMgr.bulletD.getHeight()/2;
+		int ex = x + width/2 - Bullet.W/2;
+		int ey = y + height/2 - Bullet.H/2;
 
 		this.setLive(false);
-		TankFrame.Instance.add(new Explode(ex,ey));
+		TankFrame.Instance.getGm().add(new Explode(ex,ey));
 		
 	}
 	

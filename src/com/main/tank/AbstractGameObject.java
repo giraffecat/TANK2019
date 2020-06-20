@@ -1,8 +1,9 @@
 package com.main.tank;
 
 import java.awt.Graphics;
+import java.io.Serializable;
 
-public abstract class AbstractGameObject {
+public abstract class AbstractGameObject implements Serializable {
 
 	public abstract void paint(Graphics g);
 

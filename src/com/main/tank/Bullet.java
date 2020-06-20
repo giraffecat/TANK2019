@@ -10,7 +10,38 @@ public class Bullet extends AbstractGameObject {
 	private Dir dir;
 	private final static int SPEED=10;
 	private Group group;
+	public final static int W = ResourceMgr.bulletU.getWidth();
+	public final static int H = ResourceMgr.bulletU.getHeight();
+
+	
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
+
+
 	private boolean Live = true;
+	
+	
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
 	
 	public boolean isLive() {
 		return Live;
@@ -78,7 +109,7 @@ public class Bullet extends AbstractGameObject {
 		
 		if(!tank.isLive()||!this.isLive()) return;
 		if(this.group == tank.getGroup()) return;
-		Rectangle rect = new Rectangle(x,y,ResourceMgr.bulletU.getWidth(),ResourceMgr.bulletU.getHeight());
+		Rectangle rect = new Rectangle(x,y,W,H);
 		Rectangle rectRank = new Rectangle(tank.getX(),tank.getY(),
 				ResourceMgr.goodTankU.getWidth(),ResourceMgr.goodTankU.getHeight());
 		
