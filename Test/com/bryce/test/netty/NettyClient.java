@@ -3,6 +3,7 @@ package com.bryce.test.netty;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
@@ -28,18 +29,21 @@ public class NettyClient {
 
 			@Override
 			protected void initChannel(SocketChannel socketChannel) throws Exception {
-				socketChannel.pipeline().addLast(new MyHander());
+				socketChannel.pipeline().addLast(new MyHandler());
 			}
 			
 		});
-		b.connect("localhost",8888).sync();	
-		System.in.read();
+		ChannelFuture future = b.connect("localhost",8888).sync();	
+		
+		//等待关闭
+		future.channel().closeFuture().sync();
+		System.out.println("go on");
 		workergroup.shutdownGracefully();
 	}
 	
 }
 
-class MyHander extends ChannelInboundHandlerAdapter{
+class MyHandler extends ChannelInboundHandlerAdapter{
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
