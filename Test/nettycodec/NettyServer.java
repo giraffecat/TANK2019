@@ -1,4 +1,4 @@
-package com.bryce.Nettychat;
+package nettycodec;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
@@ -50,7 +50,9 @@ public class NettyServer {
 class MyChildInitalizer extends ChannelInitializer<SocketChannel>{
 	@Override
 	protected void initChannel(SocketChannel socketChannel) throws Exception{
-		socketChannel.pipeline().addLast(new MyChildHander());
+		socketChannel.pipeline()
+		.addLast(new TankMsgDecoder())
+		.addLast(new MyChildHander());
 	}
 }
 
@@ -63,16 +65,19 @@ class MyChildHander extends ChannelInboundHandlerAdapter{
 	}
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		ByteBuf buf = (ByteBuf) msg;
-		byte[] bytes = new byte[buf.readableBytes()];
-		buf.getBytes(buf.readerIndex(),bytes);
-		String str = new String(bytes);
-		if(str.equals("__bye__")) {
-			ctx.writeAndFlush(msg);
-			NettyServer.clients.remove(ctx.channel());
-			ctx.close();
-		}else		
-		NettyServer.clients.writeAndFlush(msg);
+//		ByteBuf buf = (ByteBuf) msg;
+//		byte[] bytes = new byte[buf.readableBytes()];
+//		buf.getBytes(buf.readerIndex(),bytes);
+//		String str = new String(bytes);
+//		if(str.equals("__bye__")) {
+//			ctx.writeAndFlush(msg);
+//			NettyServer.clients.remove(ctx.channel());
+//			ctx.close();
+//		}else		
+//		NettyServer.clients.writeAndFlush(msg);
+		
+		Tankmsg tm = (Tankmsg) msg;
+		ServerFrame.INTSANCE.updateClientMsg(msg.toString());
 	}
 
 	@Override
